@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300&display=swap"
+      rel="stylesheet"
+    />
+
+    <script
+      defer
+      src="https://kit.fontawesome.com/02c374cd64.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script defer src="script.js"></script>
+
+    <title>Weather API</title>
+  </head>
+  <body>
+    <div class="weather__container">
+      <section class="nav__container">
+        <div class="weather__summary">
+          <div class="search__container">
+            <a class="search__button">Search for places</a>
+            <p class="location__button">
+              <i class="fa-solid fa-location-crosshairs"></i>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content__container">
+        <div class="navbar">
+          <div class="degree1">
+            <p class="celsius"><sup>o</sup>C</p>
+          </div>
+
+          <div class="degree2">
+            <p class="fahrenheit"><sup>o</sup>F</p>
+          </div>
+        </div>
+
+        <div class="weather__forecast">
+          <div class="weather__days"></div>
+
+          <h3>Today's Highlights</h3>
+          <div class="highlights"></div>
+        </div>
+      </section>
+    </div>
+    <div class="loader"></div>
+  </body>
+</html>
