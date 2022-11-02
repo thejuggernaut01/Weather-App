@@ -56,10 +56,11 @@ body {
 
 .location__button .fa-solid {
   position: absolute;
-  font-size: 20px;
-  color: white;
   top: 5px;
   left: 5px;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
 }
 
 /* -------------- Content Container -------------- */
@@ -386,33 +387,74 @@ input {
   justify-content: center;
   align-items: center;
   background-color: #f7f9fb;
-  /* transition: opacity 0.75s, visibility 0.75s; */
-  transition: opacity 1.5s, visibility 1.5s;
+}
+
+.spinner {
+  margin: 100px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  -webkit-animation: sk-rotate 2s infinite linear;
+  animation: sk-rotate 2s infinite linear;
 }
 
 .loader-hidden {
-  opacity: 0;
-  visibility: hidden;
+  display: none;
 }
 
-.loader::after {
-  content: "";
-  width: 80px;
-  height: 80px;
+.dot1,
+.dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: rgb(21, 21, 64);
+  border-radius: 100%;
 
-  border: 15px solid #dddddd;
-  border-top-color: #7449;
-  border-radius: 50%;
-  /* animation: loading 0.7s ease infinite; */
-  animation: loading 2s ease infinite;
+  -webkit-animation: sk-bounce 2s infinite ease-in-out;
+  animation: sk-bounce 2s infinite ease-in-out;
 }
 
-@keyframes loading {
-  from {
-    transform: rotate(0turn);
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+@-webkit-keyframes sk-rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
   }
-  to {
-    transform: rotate(1turn);
+}
+@keyframes sk-rotate {
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes sk-bounce {
+  0%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes sk-bounce {
+  0%,
+  100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
   }
 }
 

@@ -13,6 +13,8 @@ const locationButton = document.querySelector(".fa-location-crosshairs");
 const search = document.getElementById("bar");
 
 const loader = document.querySelector(".loader");
+const modalContainer = document.querySelector(".modal-container");
+const closeModal = document.querySelector(".x");
 
 const options = {
   hour: "numeric",
@@ -43,42 +45,51 @@ class weatherAPP {
   }
 
   async currentLocation() {
-    const { latitude: lat, longitude: lon } = (await this.location()).coords;
+    try {
+      const { latitude: lat, longitude: lon } = (await this.location()).coords;
 
-    const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b`
-    );
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b`
+      );
 
-    const res = response;
+      const res = response;
 
-    if (res.ok === true) {
-      loader.classList.add("loader-hidden");
+      if (res.ok === true) {
+        loader.classList.add("loader-hidden");
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.log(err.message);
     }
-
-    return await response.json();
   }
 
   // Weather API
   async weatherAPI() {
-    const response = await fetch(
-      "https://api.openweathermap.org/data/2.5/forecast?q=Lagos,NGA&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b"
-    );
-    const res = response;
+    try {
+      const response = await fetch(
+        "https://api.openweathermap.org/data/2.5/forecast?q=Lagos,NGA&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b"
+      );
+      const res = response;
 
-    if (res.ok === true) {
-      loader.classList.add("loader-hidden");
+      if (res.ok === true) {
+        loader.classList.add("loader-hidden");
+      }
+      return await response.json();
+    } catch (err) {
+      console.log(err.message);
     }
-    return await response.json();
   }
 
   // Weather Summary
   async weatherSummary(apiCall) {
-    const weatherArr = await apiCall;
-    const weather = (await apiCall).list[0];
+    try {
+      const weatherArr = await apiCall;
+      const weather = (await apiCall).list[0];
 
-    const date = new Date();
+      const date = new Date();
 
-    const html = `
+      const html = `
       <div class="summary">
         <div class="icon">
           <img src=http://openweathermap.org/img/wn/${
@@ -105,17 +116,21 @@ class weatherAPP {
       </div>
     `;
 
-    weatherSummary.insertAdjacentHTML("beforeend", html);
+      weatherSummary.insertAdjacentHTML("beforeend", html);
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   //Next 5 days forecast
   async daysForecast(apiCall) {
-    const weatherArr = (await apiCall).list;
-    weatherArr.map((weather) => {
-      // Date Formatting
-      const date = new Date(weather.dt_txt);
+    try {
+      const weatherArr = (await apiCall).list;
+      weatherArr.map((weather) => {
+        // Date Formatting
+        const date = new Date(weather.dt_txt);
 
-      const html = `
+        const html = `
       <div class="day">
         <p class="date">${new Intl.DateTimeFormat("en-US", options).format(
           date
@@ -133,16 +148,20 @@ class weatherAPP {
         </div>
       </div>
     `;
-      weatherContainer.insertAdjacentHTML("beforeend", html);
-    });
+        weatherContainer.insertAdjacentHTML("beforeend", html);
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   //Today's Highlight
   async todayHighlight(apiCall) {
-    const weather = (await apiCall).list[0];
-    const deg = this.windDirection(weather.wind.deg);
+    try {
+      const weather = (await apiCall).list[0];
+      const deg = this.windDirection(weather.wind.deg);
 
-    const html = `
+      const html = `
           <div class="wind__status">
             <p id="p">Wind Status</p>
             <h3>${weather.wind.speed}<span>mps</span></h3>
@@ -171,29 +190,37 @@ class weatherAPP {
             <h3 class="pressure">${weather.main.pressure}<span>hPa</span></h3>
           </div>`;
 
-    highlightContainer.insertAdjacentHTML("beforeend", html);
+      highlightContainer.insertAdjacentHTML("beforeend", html);
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   // CurrentLocation
   async userLocation() {
-    loader.classList.remove("loader-hidden");
-    document.querySelector(".summary").remove();
-    document.querySelector(".highlights").innerHTML = "";
+    try {
+      loader.classList.remove("loader-hidden");
+      document.querySelector(".summary").remove();
+      document.querySelector(".highlights").innerHTML = "";
 
-    const weatherArr = (await this.currentLocation()).list;
-    weatherArr.map(() => {
-      document.querySelector(".day").remove();
-    });
+      const weatherArr = (await this.currentLocation()).list;
+      weatherArr.map(() => {
+        document.querySelector(".day").remove();
+      });
 
-    this.daysForecast(this.currentLocation());
-    this.todayHighlight(this.currentLocation());
-    this.weatherSummary(this.currentLocation());
+      this.daysForecast(this.currentLocation());
+      this.todayHighlight(this.currentLocation());
+      this.weatherSummary(this.currentLocation());
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   // Search weather based on location
   // Navigation Bar -- toggle on/off
   async navBar() {
-    const html = `
+    try {
+      const html = `
         <div class="location--search hidden">
           <div class="x"><i class="fa-solid fa-xmark"></i></div>
 
@@ -212,55 +239,66 @@ class weatherAPP {
         </div>
       `;
 
-    navBar.insertAdjacentHTML("beforeend", html);
+      navBar.insertAdjacentHTML("beforeend", html);
 
-    // Toggle Switch ON
-    searchButton.addEventListener("click", () => {
-      document.querySelector(".weather__summary").classList.add("hidden");
-      document.querySelector(".location--search").classList.remove("hidden");
-      this.searchBar();
-      this.searchLocation();
-    });
+      // Toggle Switch ON
+      searchButton.addEventListener("click", () => {
+        document.querySelector(".weather__summary").classList.add("hidden");
+        document.querySelector(".location--search").classList.remove("hidden");
+        this.searchBar();
+        this.searchLocation();
+      });
 
-    // Toggle Switch OFF
-    const sideBar = document.querySelector(".fa-xmark");
-    sideBar.addEventListener("click", () => {
-      document.querySelector(".location--search").classList.add("hidden");
-      document.querySelector(".weather__summary").classList.remove("hidden");
-    });
+      // Toggle Switch OFF
+      const sideBar = document.querySelector(".fa-xmark");
+      sideBar.addEventListener("click", () => {
+        document.querySelector(".location--search").classList.add("hidden");
+        document.querySelector(".weather__summary").classList.remove("hidden");
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   // Seach Bar Location [london, New York, Tokyo, Amsterdam, Rome]
   async searchBar() {
-    // search based on city
-    const cities = document.querySelectorAll(".city");
+    try {
+      // search based on city
+      const cities = document.querySelectorAll(".city");
 
-    for (let i = 0; i < cities.length; i++) {
-      cities[i].addEventListener("click", async () => {
-        const city = cities[i].textContent.toLowerCase();
+      for (let i = 0; i < cities.length; i++) {
+        cities[i].addEventListener("click", async () => {
+          const city = cities[i].textContent.toLowerCase();
+
+          const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?q=${city}&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b`
+          );
+
+          this.helper(response);
+        });
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  // Search various location based on city
+  async searchLocation() {
+    try {
+      bar.addEventListener("click", async () => {
+        const input = document.getElementById("fname");
+        const city = input.value.toLowerCase();
 
         const response = await fetch(
           `https://api.openweathermap.org/data/2.5/forecast?q=${city}&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b`
         );
 
         this.helper(response);
+        input.value = "";
       });
+    } catch (err) {
+      console.log(err.message);
     }
-  }
-
-  // Search various location based on city
-  async searchLocation() {
-    bar.addEventListener("click", async () => {
-      const input = document.getElementById("fname");
-      const city = input.value.toLowerCase();
-
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&cnt=5&appid=f5909aace6fb4cb18ea6b3a31403d18b`
-      );
-
-      this.helper(response);
-      input.value = "";
-    });
   }
 
   // Calculate Wind Direction
@@ -303,23 +341,27 @@ class weatherAPP {
   }
 
   async helper(resp) {
-    loader.classList.remove("loader-hidden");
-    document.querySelector(".summary").remove();
-    document.querySelector(".highlights").innerHTML = "";
+    try {
+      loader.classList.remove("loader-hidden");
+      document.querySelector(".summary").remove();
+      document.querySelector(".highlights").innerHTML = "";
 
-    const weatherArr = (await this.currentLocation()).list;
-    weatherArr.map(() => {
-      document.querySelector(".day").remove();
-    });
+      const weatherArr = (await this.currentLocation()).list;
+      weatherArr.map(() => {
+        document.querySelector(".day").remove();
+      });
 
-    const res = await resp.json();
-    this.daysForecast(res);
-    this.todayHighlight(res);
-    this.weatherSummary(res);
+      const res = await resp.json();
+      this.daysForecast(res);
+      this.todayHighlight(res);
+      this.weatherSummary(res);
 
-    // close nav bar
-    document.querySelector(".location--search").classList.add("hidden");
-    document.querySelector(".weather__summary").classList.remove("hidden");
+      // close nav bar
+      document.querySelector(".location--search").classList.add("hidden");
+      document.querySelector(".weather__summary").classList.remove("hidden");
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 }
 
